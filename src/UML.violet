@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="11.0.26" class="java.beans.XMLDecoder">
+ <object class="com.horstmann.violet.ClassDiagramGraph">
+  <void method="addNode">
+   <object class="com.horstmann.violet.ClassNode" id="ClassNode0">
+    <void property="attributes">
+     <void property="text">
+      <string>- BOARD_SIZE: int = 15
+- CENTER_ROW: int = 7
+- CENTER_COL: int = 7
+- grid: Tile[][]
+-firstWordPlaced: boolean</string>
+     </void>
+    </void>
+    <void property="methods">
+     <void property="text">
+      <string>+ Board()
++ validPosition(row: int, col: int): boolean
++ getPosition(row: int, col: int): Tile
++placeTiles(rowLabel: String, col: int, direction: String, word: String, player: Player): boolean
++clearBoard(): boolean
++isEmpty():boolean
++getWordsAtPosition(row: int, col: int): void
++display(): void
++getBoardSize(): int
++isFirstWordPlaced(): boolean
+-isWordInBound(row: int, col: int, direction: String, word: String) : boolean
+-coversCenter(row: int, col: int, direction: String, word: String): boolean
+-canPlaceTiles(row: int, col: int, direction: String, word: String): boolean
+-wordConnects(row: int, col: int, direction: String, word: String): boolean
+-hasNeighbourTile(row: int, col: int, direction: String, word: String): boolean
+-playerHasTiles(player: Player, row: int, col: int, direction: String, word: String): boolean
+-performPlacement(player: Player, row: int, col: int, direction: String, word: String): void
+-getHorizontalWord(row: int, col: int): String
+-getVerticalWord(row: int, col: int): String</string>
+     </void>
+    </void>
+    <void property="name">
+     <void property="text">
+      <string>Board</string>
+     </void>
+    </void>
+   </object>
+   <object class="java.awt.geom.Point2D$Double" id="Point2D$Double0">
+    <void class="java.awt.geom.Point2D$Double" method="getField">
+     <string>y</string>
+     <void method="set">
+      <object idref="Point2D$Double0"/>
+      <double>30.0</double>
+     </void>
+    </void>
+    <void method="setLocation">
+     <double>0.0</double>
+     <double>30.0</double>
+    </void>
+   </object>
+  </void>
+  <void method="addNode">
+   <object class="com.horstmann.violet.ClassNode" id="ClassNode1">
+    <void property="attributes">
+     <void property="text">
+      <string>- tiles: List&lt;Tile&gt;
+- random: Random</string>
+     </void>
+    </void>
+    <void property="methods">
+     <void property="text">
+      <string>+TleBag()
++isEmpty(): boolean
++getRandomTile(): Tile
++returnTile(tile: Tile): void
++getRemainingTiles(): void
++displayInfo(): void
++getTiles(): List&lt;Tile&gt;
+-initializeTiles(): void
+-addTiles(character: char, count: int): void
+</string>
+     </void>
+    </void>
+    <void property="name">
+     <void property="text">
+      <string>TileBag</string>
+     </void>
+    </void>
+   </object>
+   <object class="java.awt.geom.Point2D$Double" id="Point2D$Double1">
+    <void class="java.awt.geom.Point2D$Double" method="getField">
+     <string>x</string>
+     <void method="set">
+      <object idref="Point2D$Double1"/>
+      <double>70.0</double>
+     </void>
+    </void>
+    <void class="java.awt.geom.Point2D$Double" method="getField">
+     <string>y</string>
+     <void method="set">
+      <object idref="Point2D$Double1"/>
+      <double>480.0</double>
+     </void>
+    </void>
+    <void method="setLocation">
+     <double>70.0</double>
+     <double>480.0</double>
+    </void>
+   </object>
+  </void>
+ </object>
+</java>
