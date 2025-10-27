@@ -61,6 +61,41 @@ public class Board {
     }
 
     /**
+     * Places one tile at a precise position.
+     * It is used by ScrabbleGame when we place an individual tile
+     *
+     * @param x the row position from 0 to 14
+     * @param y the column position from 0 to 14
+     * @param tile the tile to place
+     * @return true if the placement was a success, false if otherwise
+     */
+    public boolean placeTile(int x, int y, Tile tile){
+        //we check the position
+        if (!validPosition(x,y)){
+            return false;
+        }
+        //check if the position is already filled
+        if (grid[x][y] != null){
+            return false;
+        }
+        //Place the tile
+        grid[x][y] = tile;
+        return true;
+
+    }
+
+    /**
+     * Gets the tile at a specific position.
+     * It is used by ScrabbleGame
+     *
+     * @param x the row position from 0 to 14
+     * @param y the column position from 0 to 14
+     * @return the tile at the position or null if it is empty
+     */
+    public Tile getTile(int x, int y){
+        return getPosition(x, y);
+    }
+    /**
      * Places the tiles on the board for a word.
      * This is the main way to place words when playing
      *
@@ -295,6 +330,7 @@ public class Board {
 
     /**
      * Clears the entire board
+     * Used for Test purposes in BoardTest
      *
      * @return true if the board has cleared succesfully
      */
@@ -310,7 +346,7 @@ public class Board {
 
     /**
      * Checks if the board is empty
-     *
+     * Used for Test purposes in BoardTest
      * @return true if no tiles are on the board and false if otherwise
      */
     public boolean isEmpty(){
@@ -326,6 +362,7 @@ public class Board {
 
     /**
      * Gets all words at a precised position.
+     * Used for Test purposes in BoardTest
      */
     public void getWordsAtPosition(int row, int col){
         if (!validPosition(row, col)){
@@ -382,37 +419,10 @@ public class Board {
         return word.toString();
     }
 
-    /**
-     * Displays the board in text format
-     * shows the 15x15 grid with all the placed tiles.
-     */
-    public void display(){
-        System.out.println(("\n  " + " 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15"));
-        for (int i = 0; i < BOARD_SIZE; i++){
-            //print A to O
-            System.out.print((char)('A' + i) + " ");
-
-            //print each cell
-
-            for (int j = 0; j < BOARD_SIZE; j++){
-                if (grid[i][j] != null){
-                    System.out.print("[" + grid[i][j].getCharacter()+ "]");
-                } else {
-                    //center symbol
-                    if (i == CENTER_ROW && j == CENTER_COL){
-                        System.out.print(" * ");
-                    } else {
-                        System.out.print(" . ");
-                    }
-                }
-            }
-            System.out.println();
-        }
-    }
 
     /**
      * Gets the board size.
-     *
+     * Used for Test purposes in BoardTest
      * @return the size of the board
      */
     public int getBoardSize(){
@@ -421,7 +431,7 @@ public class Board {
 
     /**
      * Checks if the first word has been placed
-     *
+     * Used for Test purposes in BoardTest
      * @return true if the first word was placed, false if not
      */
     public boolean isFirstWordPlaced(){

@@ -24,7 +24,7 @@ public class BoardTest {
     @Before
     public void setUp(){
         board = new Board();
-        testPlayer = new Player("Test Player", 1);
+        testPlayer = new Player(0,"Test Player", 1);
 
         //Add some tiles to test player
         testPlayer.addTile(new Tile('H'));
@@ -124,7 +124,7 @@ public class BoardTest {
         board.placeTiles("H", 8, "ACROSS", "HELLO", testPlayer);
 
         //Create second player with different tiles
-        Player player2 = new Player("Player 2", 2);
+        Player player2 = new Player(0,"Player 2", 2);
         player2.addTile(new Tile('W'));
         player2.addTile(new Tile('O'));
         player2.addTile(new Tile('R'));
@@ -147,7 +147,7 @@ public class BoardTest {
         board.placeTiles("H", 8, "ACROSS", "HELLO", testPlayer);
 
         //Create second player with different tiles
-        Player player2 = new Player("Player 2", 2);
+        Player player2 = new Player(0,"Player 2", 2);
         player2.addTile(new Tile('W'));
         player2.addTile(new Tile('A'));
         player2.addTile(new Tile('T'));
@@ -168,7 +168,7 @@ public class BoardTest {
         board.placeTiles("H", 8, "ACROSS", "HELLO", testPlayer);
 
         //Create player with disconnect word.
-        Player player2 = new Player("Player 2", 2);
+        Player player2 = new Player(0,"Player 2", 2);
         player2.addTile(new Tile('W'));
         player2.addTile(new Tile('O'));
         player2.addTile(new Tile('R'));
@@ -194,7 +194,7 @@ public class BoardTest {
      */
     @Test
     public void testPlayerMustHaveTiles(){
-        Player emptyPlayer = new Player("Empty", 3);
+        Player emptyPlayer = new Player(0,"Empty", 3);
 
         boolean result = board.placeTiles("H", 8, "ACROSS", "HELLO", emptyPlayer);
         assertFalse("Player without tiles should fail", result);

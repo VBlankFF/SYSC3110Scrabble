@@ -130,7 +130,7 @@ public class TileBag {
 
     /**
      * Gets the number of tiles remaining in the bag.
-     *
+     * Used for Test purposes in TileBagTest
      * @return the number of tiles still remaining in the bag
      */
     public int getRemainingTiles(){
@@ -140,6 +140,7 @@ public class TileBag {
     /**
      * Displays the information about the tile bag
      * It shows the remaining tile count
+     * Used for Test purposes in TileBagTest
      */
     public void displayInfo(){
         System.out.println("Tiles remaining in bag: " + getRemainingTiles());
@@ -148,7 +149,7 @@ public class TileBag {
     /**
      * Gets a list of the tile list
      * This method is designed to help with test cases.
-     *
+     * Used for Test purposes in TileBagTest
      * @return a list of the tiles
      */
     public List<Tile> getTiles(){

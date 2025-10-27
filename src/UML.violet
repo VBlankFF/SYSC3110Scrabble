@@ -17,11 +17,12 @@
       <string>+ Board()
 + validPosition(row: int, col: int): boolean
 + getPosition(row: int, col: int): Tile
++ placeTile(x: int, y: int, tile: Tile): boolean
++getTile(x: int, y: int): Tile
 +placeTiles(rowLabel: String, col: int, direction: String, word: String, player: Player): boolean
 +clearBoard(): boolean
 +isEmpty():boolean
 +getWordsAtPosition(row: int, col: int): void
-+display(): void
 +getBoardSize(): int
 +isFirstWordPlaced(): boolean
 -isWordInBound(row: int, col: int, direction: String, word: String) : boolean
@@ -65,7 +66,7 @@
     </void>
     <void property="methods">
      <void property="text">
-      <string>+TleBag()
+      <string>+TileBag()
 +isEmpty(): boolean
 +getRandomTile(): Tile
 +returnTile(tile: Tile): void
@@ -88,19 +89,19 @@
      <string>x</string>
      <void method="set">
       <object idref="Point2D$Double1"/>
-      <double>70.0</double>
+      <double>520.0</double>
      </void>
     </void>
     <void class="java.awt.geom.Point2D$Double" method="getField">
      <string>y</string>
      <void method="set">
       <object idref="Point2D$Double1"/>
-      <double>480.0</double>
+      <double>70.0</double>
      </void>
     </void>
     <void method="setLocation">
+     <double>520.0</double>
      <double>70.0</double>
-     <double>480.0</double>
     </void>
    </object>
   </void>
