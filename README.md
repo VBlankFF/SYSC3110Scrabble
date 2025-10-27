@@ -10,7 +10,7 @@ text form. The deliverables includes the code, UML diagrams, and documentations.
 ## Project Division
 Here is how the work was divided:
 
-Emmanuel Konate: Board class, TileBag class, UMLs
-Aymen Zebentout: Player class, ReadMe
-Joseph Dereje: Tile class, Dictionary class, Sequence Diagrams
-Amber: ScrabbleGame class, Data Structure Explanation
+- Emmanuel Konate: Board class, TileBag class, UMLs
+- Aymen Zebentout: Player class, ReadMe
+- Joseph Dereje: Tile class, Dictionary class, Sequence Diagrams
+- Amber: ScrabbleGame class, Data Structure Explanation
