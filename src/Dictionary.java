@@ -31,4 +31,7 @@ public class Dictionary {
         return validWords.contains(word.toLowerCase());
     }
 
+    public int getSize(){
+        return validWords.size();
+    }
 }
