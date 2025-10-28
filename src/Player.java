@@ -39,9 +39,9 @@ public class Player {
 
     /**
      * Removes a tile from player's hand when it is place on the board
-     * @param tile tile to remove
+     * @param character tile to remove
      */
-    private void removeTile(char character){
+    public Tile removeTile(char character){
         for (int i = 0; i < tiles.size(); i++){
             if (tiles.get(i).getCharacter()==character){
                 return tiles.remove(i);
