@@ -97,6 +97,27 @@ public class ScrabbleGUI extends JFrame implements ScrabbleView{
                 } else {
                     btn.setBackground(Color.WHITE);
                 }
+                //set the backgtound color based on the type of premium square
+                Board.PremiumSquare premium = model.getBoard().getPremiumSquare(i, j);
+                switch (premium){
+                    case TRIPLE_WORD:
+                        btn.setBackground(Color.red);
+                        break;
+                    case DOUBLE_WORD:
+                        btn.setBackground(Color.pink);
+                        break;
+                    case TRIPLE_LETTER:
+                        //use rgb to get specific color
+                        btn.setBackground(new Color(0, 0, 139));
+                        break;
+                    case DOUBLE_LETTER:
+                        //use rgb to get specific color
+                        btn.setBackground(new Color(173, 216, 230));
+                        break;
+                    default:
+                        btn.setBackground(Color.white);
+                        break;
+                }
                 btn.setFocusPainted(false);
                 boardButtons[i][j] = btn;
                 boardPanel.add(btn);
@@ -235,47 +256,69 @@ public class ScrabbleGUI extends JFrame implements ScrabbleView{
     public void update(){
         //update information about the board
         Board board = model.getBoard();
-        for (int row = 0; row < BOARD_SIZE; row++){
-            for (int col = 0; col < BOARD_SIZE; col++){
+        for (int row = 0; row < BOARD_SIZE; row++) {
+            for (int col = 0; col < BOARD_SIZE; col++) {
                 Tile tile = board.getPosition(row, col);
-                if (tile != null){
-                    boardButtons[row][col].setText(String.valueOf(tile.getCharacter()));
+                if (tile != null) {
+                    char displayChar = tile.isBlank() ? tile.getRepresentedLetter() : tile.getCharacter();
+                    boardButtons[row][col].setText(String.valueOf(displayChar));
                     boardButtons[row][col].setBackground(Color.YELLOW);
                 } else {
                     boardButtons[row][col].setText("");
-                    if (row == 7 && col == 7){
-                        boardButtons[row][col].setBackground(Color.PINK);
-                    } else {
-                         boardButtons[row][col].setBackground(Color.WHITE);
+                    Board.PremiumSquare premium = board.getPremiumSquare(row, col);
+                    switch (premium) {
+                        case TRIPLE_WORD:
+                            boardButtons[row][col].setBackground(Color.red);
+                            break;
+                        case DOUBLE_WORD:
+                            boardButtons[row][col].setBackground(Color.pink);
+                            break;
+                        case TRIPLE_LETTER:
+                            //use rgb to get specific color
+                            boardButtons[row][col].setBackground(new Color(0, 0, 139));
+                            break;
+                        case DOUBLE_LETTER:
+                            //use rgb to get specific color
+                            boardButtons[row][col].setBackground(new Color(173, 216, 230));
+                            break;
+                        default:
+                            boardButtons[row][col].setBackground(Color.white);
+                            break;
                     }
                 }
             }
         }
-        //information about player is updated
-        if (!model.isPlaying() || model.getPlayerList().isEmpty()){
-            currentPlayerLabel.setText("The Game has not started yet bud!");
-            scoreLabel.setText("Score: 0");
-            tilesRemainingLabel.setText("Tiles in bag: 100");
-            for (int i = 0; i < 7; i++){
-                handButtons[i].setText("");
-            }
-            return;
-        }
-        Player currentPlayer = model.getCurrentPlayer();
-        currentPlayerLabel.setText("Current Player: " + currentPlayer.getName());
-        scoreLabel.setText("Score: " + currentPlayer.getScore());
-        tilesRemainingLabel.setText("Tiles in bag: " + model.getTilesRemaining());
 
-        //hand gets updated
-        List<Tile> tiles = currentPlayer.getTiles();
-        for (int i = 0; i < 7; i++){
-            if ( i < tiles.size()){
-                Tile tile = tiles.get(i);
-                handButtons[i].setText(tile.getCharacter() + "(" + tile.getValue() + ")");
-            } else {
-                handButtons[i].setText("");
+            //information about player is updated
+            if (!model.isPlaying() || model.getPlayerList().isEmpty()) {
+                currentPlayerLabel.setText("The Game has not started yet bud!");
+                scoreLabel.setText("Score: 0");
+                tilesRemainingLabel.setText("Tiles in bag: 100");
+                for (int i = 0; i < 7; i++) {
+                    handButtons[i].setText("");
+                }
+                return;
             }
-        }
+            Player currentPlayer = model.getCurrentPlayer();
+            currentPlayerLabel.setText("Current Player: " + currentPlayer.getName());
+            scoreLabel.setText("Score: " + currentPlayer.getScore());
+            tilesRemainingLabel.setText("Tiles in bag: " + model.getTilesRemaining());
+
+            //hand gets updated
+            List<Tile> tiles = currentPlayer.getTiles();
+            for (int i = 0; i < 7; i++) {
+                if (i < tiles.size()) {
+                    Tile tile = tiles.get(i);
+                    if (tile.isBlank()) {
+                        handButtons[i].setText("BLANK(0)");
+                    } else {
+                        handButtons[i].setText(tile.getCharacter() + "(" + tile.getValue() + ")");
+                    }
+                } else {
+                    handButtons[i].setText("");
+                }
+            }
+
         //update the buttons
         boolean playing = model.isPlaying();
         placeWordButton.setEnabled(playing);

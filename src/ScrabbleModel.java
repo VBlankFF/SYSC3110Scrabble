@@ -123,7 +123,7 @@ public class ScrabbleModel {
 
         //get tiles at the positions
         List<Tile> usedTiles = new ArrayList<>();
-        boolean canPlace = true;
+        List<int[]> newTilePositions = new ArrayList<>();
 
         for (int i = 0; i < word.length(); i++){
             int r = (direction == 1) ? row : row + i;
@@ -137,8 +137,9 @@ public class ScrabbleModel {
                 boolean found = false;
 
                 for (Tile t : player.getTiles()){
-                    if (t.getCharacter() == needed && !usedTiles.contains(t)){
+                    if (!usedTiles.contains(t) && (t.getCharacter() == needed || t.isBlank())){
                         usedTiles.add(t);
+                        newTilePositions.add(new int[] {r, c});
                         found = true;
                         break;
                     }
@@ -148,14 +149,16 @@ public class ScrabbleModel {
                         return  0;
                 }
             } else {
+                //now we can handle blank tiles on the board
+                char existChar = existTile.isBlank() ? existTile.getRepresentedLetter() : existTile.getCharacter();
                 //the position has a tile already
-                if(existTile.getCharacter() != Character.toUpperCase(word.charAt(i))){
+                if(existChar != Character.toUpperCase(word.charAt(i))){
                     return 0;
                 }
             }
         }
         //calculate the score and validation of word
-        int score = scoreCalculation(row, col, direction, word, usedTiles);
+        int score = scoreCalculation(row, col, direction, word, usedTiles, newTilePositions);
 
         if(score > 0){
             //put the tiles on the board
@@ -165,8 +168,13 @@ public class ScrabbleModel {
                 int c = (direction == 1) ? col + i : col;
 
                 if (gameBoard.getPosition(r, c) == null){
-                    gameBoard.placeTile(r, c, usedTiles.get(tileIndex));
-                    player.getTiles().remove(usedTiles.get(tileIndex));
+                    Tile tile = usedTiles.get(tileIndex);
+                    //if it is a blank tile, we set what letter it will represent
+                    if (tile.isBlank()){
+                        tile.setRepresentedLetter(word.charAt(i));
+                    }
+                    gameBoard.placeTile(r, c, tile);
+                    player.getTiles().remove(tile);
                     tileIndex++;
                 }
             }
@@ -200,7 +208,8 @@ public class ScrabbleModel {
      * @param usedTiles tiles used from the hand
      * @return score if valid and 0 if invalid
      */
-    private int scoreCalculation(int row, int col, int direction, String word, List<Tile> usedTiles){
+    private int scoreCalculation(int row, int col, int direction, String word, List<Tile> usedTiles, List<int[]>
+                                 newTilePositions){
         Set<Tile> tilesInvolved = new HashSet<>(usedTiles);
         boolean connectedToCurrentTile = false;
         String checkWord = word.toUpperCase();
@@ -214,7 +223,8 @@ public class ScrabbleModel {
                 if (t == null){
                     break;
                 }
-                checkWord = t.getCharacter() + checkWord;
+                char characterT = t.isBlank() ? t.getRepresentedLetter() : t.getCharacter();
+                checkWord = characterT + checkWord;
                 tilesInvolved.add(t);
                 connectedToCurrentTile = true;
             }
@@ -224,7 +234,8 @@ public class ScrabbleModel {
                 if (t == null){
                     break;
                 }
-                checkWord += t.getCharacter();
+                char characterT = t.isBlank() ? t.getRepresentedLetter() : t.getCharacter();
+                checkWord += characterT;
                 tilesInvolved.add(t);
                 connectedToCurrentTile = true;
             }
@@ -236,7 +247,8 @@ public class ScrabbleModel {
                 if(t == null){
                     break;
                 }
-                checkWord = t.getCharacter() + checkWord;
+                char characterT = t.isBlank() ? t.getRepresentedLetter() : t.getCharacter();
+                checkWord = characterT + checkWord;
                 tilesInvolved.add(t);
                 connectedToCurrentTile = true;
             }
@@ -246,7 +258,8 @@ public class ScrabbleModel {
                 if (t == null){
                     break;
                 }
-                checkWord += t.getCharacter();
+                char characterT = t.isBlank() ? t.getRepresentedLetter() : t.getCharacter();
+                checkWord += characterT;
                 tilesInvolved.add(t);
                 connectedToCurrentTile = true;
             }
@@ -256,6 +269,13 @@ public class ScrabbleModel {
         if (!gameDictionary.validWord(checkWord.toLowerCase())){
             return 0;
         }
+
+        Set<String> newPosSet = new HashSet<>();
+        for (int[] pos : newTilePositions){
+            newPosSet.add(pos[0] + "," + pos[1]);
+        }
+        int score = 0;
+        int multiplyWord = 1;
 
         //check words in perpendicular
         //horizontal, so we check words above and under each tile
@@ -270,7 +290,8 @@ public class ScrabbleModel {
                     if (t == null){
                         break;
                     }
-                    perpenWord = t.getCharacter() + perpenWord;
+                    char characterT = t.isBlank() ? t.getRepresentedLetter() : t.getCharacter();
+                    perpenWord = characterT + perpenWord;
                     tilesInvolved.add(t);
                     connectedToCurrentTile = true;
                 }
@@ -281,12 +302,43 @@ public class ScrabbleModel {
                     if (t == null){
                         break;
                     }
-                    perpenWord += t.getCharacter();
+                    char characterT = t.isBlank() ? t.getRepresentedLetter() : t.getCharacter();
+                    perpenWord += characterT;
                     tilesInvolved.add(t);
                     connectedToCurrentTile = true;
                 }
-                if (perpenWord.length() > 1 && !gameDictionary.validWord(perpenWord.toLowerCase())){
-                    return 0;
+                if (perpenWord.length() > 1 ){
+                    if (!gameDictionary.validWord(perpenWord.toLowerCase())){
+                        return 0;
+                    }
+
+                    int perpenScore = 0;
+                    int perpenMultiplier = 1;
+
+                    int startR = row;
+                    while (startR > 0 && gameBoard.getPosition(startR - 1, c) != null){
+                        startR--;
+                    }
+                    for (int r = startR; r < gameBoard.getBoardSize() && gameBoard.getPosition(r, c) != null; r++){
+                        Tile t = gameBoard.getPosition(r, c);
+                        int tileVal = t.getValue();
+                        int letterMult = 1;
+
+                        if (newPosSet.contains(r + "," + c)){
+                            Board.PremiumSquare prem = gameBoard.getPremiumSquare(r, c);
+                            if (prem == Board.PremiumSquare.DOUBLE_LETTER){
+                                letterMult = 2;
+                            } else if (prem == Board.PremiumSquare.TRIPLE_LETTER){
+                                letterMult = 3;
+                            } else if (prem == Board.PremiumSquare.DOUBLE_WORD){
+                                perpenMultiplier *= 2;
+                            } else if (prem == Board.PremiumSquare.TRIPLE_WORD){
+                                perpenMultiplier *= 3;
+                            }
+                        }
+                        perpenScore += tileVal * letterMult;
+                    }
+                    score += perpenScore * perpenMultiplier;
                 }
             }
             //vertical check words to the left and right of each tile
@@ -301,8 +353,8 @@ public class ScrabbleModel {
                     if (t == null){
                         break;
                     }
-                    perpenWord = t.getCharacter() + perpenWord;
-                    tilesInvolved.add(t);
+                    char characterT = t.isBlank() ? t.getRepresentedLetter() : t.getCharacter();
+                    perpenWord = characterT + perpenWord;                    tilesInvolved.add(t);
                     connectedToCurrentTile = true;
                 }
                 //check the right
@@ -311,12 +363,42 @@ public class ScrabbleModel {
                     if (t == null){
                         break;
                     }
-                    perpenWord += t.getCharacter();
-                    tilesInvolved.add(t);
+                    char characterT = t.isBlank() ? t.getRepresentedLetter() : t.getCharacter();
+                    perpenWord += characterT;                    tilesInvolved.add(t);
                     connectedToCurrentTile = true;
                 }
-                if (perpenWord.length() > 1 && !gameDictionary.validWord(perpenWord.toLowerCase())){
-                    return 0;
+                if (perpenWord.length() > 1 ){
+                    if (!gameDictionary.validWord(perpenWord.toLowerCase())){
+                        return 0;
+                    }
+
+                    int perpenScore = 0;
+                    int perpenMultiplier = 1;
+
+                    int startC = col;
+                    while (startC > 0 && gameBoard.getPosition(r, startC - 1) != null){
+                        startC--;
+                    }
+                    for (int c = startC; c < gameBoard.getBoardSize() && gameBoard.getPosition(r, c) != null; c++){
+                        Tile t = gameBoard.getPosition(r, c);
+                        int tileVal = t.getValue();
+                        int letterMult = 1;
+
+                        if (newPosSet.contains(r + "," + c)){
+                            Board.PremiumSquare prem = gameBoard.getPremiumSquare(r, c);
+                            if (prem == Board.PremiumSquare.DOUBLE_LETTER){
+                                letterMult = 2;
+                            } else if (prem == Board.PremiumSquare.TRIPLE_LETTER){
+                                letterMult = 3;
+                            } else if (prem == Board.PremiumSquare.DOUBLE_WORD){
+                                perpenMultiplier *= 2;
+                            } else if (prem == Board.PremiumSquare.TRIPLE_WORD){
+                                perpenMultiplier *= 3;
+                            }
+                        }
+                        perpenScore += tileVal * letterMult;
+                    }
+                    score += perpenScore * perpenMultiplier;
                 }
             }
         }
@@ -341,11 +423,53 @@ public class ScrabbleModel {
                 return 0;
             }
         }
-        //calculate the score
-        int score = 0;
-        for (Tile t : tilesInvolved){
-            score += t.getValue();
+
+
+        for (int i = 0; i < word.length(); i++){
+            int r = (direction == 1) ? row : row + i;
+            int c = (direction == 1) ? col + i : col ;
+
+            Tile tile = gameBoard.getPosition(r, c);
+            boolean isNewTile = newPosSet.contains(r + "," + c);
+
+            int tileVal = 0;
+            if (tile != null){
+                tileVal = tile.getValue();
+            } else {
+                //tile is not placed yet so we get from usedTiles
+                for (int j = 0; j < newTilePositions.size(); j++){
+                    if (newTilePositions.get(j)[0] == r && newTilePositions.get(j)[1] == c){
+                        tileVal = usedTiles.get(j).getValue();
+                        break;
+                    }
+                }
+            }
+            int letterMultiply = 1;
+            // now we put premium squares only for new tiles
+            if (isNewTile){
+                Board.PremiumSquare premium = gameBoard.getPremiumSquare(r, c);
+                switch (premium){
+                    case DOUBLE_LETTER:
+                        letterMultiply = 2;
+                        break;
+                    case TRIPLE_LETTER:
+                        letterMultiply = 3;
+                        break;
+                    case DOUBLE_WORD:
+                        multiplyWord *= 2;
+                        break;
+                    case TRIPLE_WORD:
+                        multiplyWord *= 3;
+                        break;
+                }
+            }
+
+            score += tileVal * letterMultiply;
         }
+
+
+
+        score *= multiplyWord;
         return score;
     }
 

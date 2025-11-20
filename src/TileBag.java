@@ -6,7 +6,7 @@ import java.util.*;
  * It also gives ways to draw random tiles and check if empty.
  *
  * @author Emmanuel Konate 101322259
- * @version 1.0
+ * @version 2.0
  */
 
 public class TileBag {
@@ -38,6 +38,7 @@ public class TileBag {
      * 5 points : Kx1
      * 8 points : Jx1, Xx1
      * 10 points : Qx1, Zx1
+     * 0 points : Blank x2
      */
 
     private void initializeTiles(){
@@ -74,6 +75,9 @@ public class TileBag {
 
         addTiles('Q', 1); //10 points
         addTiles('Z', 1); //10 points
+        //add 2 blank tiles now
+        tiles.add(new Tile(true));
+        tiles.add(new Tile(true));
 
         //we finish with shuffling the tiles so that they aren't in order
         Collections.shuffle(tiles);

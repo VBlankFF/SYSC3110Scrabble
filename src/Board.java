@@ -6,7 +6,7 @@ import java.util.List;
  * It handles tile placement, position, validation, and also baord management
  *
  * @author Emmanuel Konate 101322259
- * @version 1.0
+ * @version 2.0
  */
 
 public class Board {
@@ -16,7 +16,12 @@ public class Board {
     private static final int CENTER_ROW = 7;
     private static final int CENTER_COL = 7;
 
+    public enum PremiumSquare{
+        NORMAL, DOUBLE_LETTER, TRIPLE_LETTER, DOUBLE_WORD, TRIPLE_WORD
+    }
+
     private Tile[][] grid;
+    private PremiumSquare[][] premiumSquares;
     private boolean firstWordPlaced;
 
     /**
@@ -24,7 +29,11 @@ public class Board {
      */
     public Board(){
         this.grid = new Tile[BOARD_SIZE][BOARD_SIZE];
+        //setup the premium squares
+        this.premiumSquares = new PremiumSquare[BOARD_SIZE][BOARD_SIZE];
         this.firstWordPlaced = false;
+        //initialize the squares
+        initializePremiumSquares();
     }
 
     /**
@@ -288,7 +297,9 @@ public class Board {
         for(char needed : tilesNeeded){
             boolean found = false;
             for (int i = 0; i < playerTiles.size(); i++){
-                if (playerTiles.get(i).getCharacter() == needed){
+                Tile tile = playerTiles.get(i);
+                //check if its a notmal tile with same character or blank tile.
+                if (tile.getCharacter() == needed || tile.isBlank()){
                     playerTiles.remove(i);
                     found = true;
                     break;
@@ -326,6 +337,55 @@ public class Board {
                 }
             }
         }
+    }
+
+    /**
+     * This method initializes the premium squares.
+     */
+    private void initializePremiumSquares(){
+        //setup all squares as Normal
+        for (int i = 0; i < BOARD_SIZE; i++){
+            for (int j = 0; j < BOARD_SIZE; j++){
+                premiumSquares[i][j] = PremiumSquare.NORMAL;
+            }
+        }
+        //triple  word score in red
+        int[][] triplews = {{0,0}, {0,7}, {0,14}, {7,0}, {7,14}, {14, 0}, {14, 7}, {14, 14}};
+        for (int[] pos : triplews){
+            premiumSquares[pos[0]][pos[1]] = PremiumSquare.TRIPLE_WORD;
+        }
+        //double  word score in pink
+        int[][] doublews = {{1,1}, {2,2}, {3,3}, {4,4}, {7,7}, {10, 10}, {11, 11}, {12, 12}, {13,13},
+                {1,13}, {2,12}, {3,11}, {4,10}, {10,4}, {11,3}, {12,2}, {13,1},
+                {7,7}};
+        for (int[] pos : doublews){
+            premiumSquares[pos[0]][pos[1]] = PremiumSquare.DOUBLE_WORD;
+        }
+        //triple  Letter score in darker blue
+        int[][] triplels = {{1,5}, {1,9}, {5,1}, {5,5}, {5,9}, {5, 13}, {9, 1}, {9, 5}, {9, 9}, {9, 13}, {13, 5}, {13, 9}};
+        for (int[] pos : triplels){
+            premiumSquares[pos[0]][pos[1]] = PremiumSquare.TRIPLE_LETTER;
+        }
+        //double  letter score in light blue
+        int[][] doublels = {{0,3}, {0, 11}, {2,6}, {2,8}, {3,0}, {3, 7}, {3, 14}, {6, 2}, {6, 6}, {6, 8}, {6, 12},
+                {7, 3}, {7, 11}, {8, 2}, {8, 6}, {8, 8}, {8, 12}, {11, 0}, {11, 7}, {11, 14}, {12, 6}, {12, 8}, {14, 3},
+                {14, 11}};
+        for (int[] pos : doublels){
+            premiumSquares[pos[0]][pos[1]] = PremiumSquare.DOUBLE_LETTER;
+        }
+    }
+
+    /**
+     * Gets all the premium square type at a position
+     *
+     * @param row the row of the desired position
+     * @param col the column of teh desired position
+     */
+    public PremiumSquare getPremiumSquare(int row, int col){
+        if (!validPosition(row, col)){
+            return PremiumSquare.NORMAL;
+        }
+        return premiumSquares[row][col];
     }
 
     /**

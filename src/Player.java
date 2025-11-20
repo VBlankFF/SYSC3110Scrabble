@@ -3,8 +3,8 @@ import java.util.*;
 /**
  * Player class for Scrabble game.
  * Represents a player with their tiles, score, and index.
- * @author Aymen Zebentout
- * @version 1.0
+ * @author Aymen Zebentout, Esli Emmanuel Konate
+ * @version 2.0
  * @since 10/26/2025
  */
 
@@ -42,9 +42,22 @@ public class Player {
      * @param character tile to remove
      */
     public Tile removeTile(char character){
+        //first we try to find a normal tile with same character
         for (int i = 0; i < tiles.size(); i++){
-            if (tiles.get(i).getCharacter()==character){
+            Tile tile = tiles.get(i);
+            if (!tile.isBlank() && tile.getCharacter() == character){
                 return tiles.remove(i);
+            }
+        }
+
+        //if no normal tile was found, we use a blank tile
+        for (int i = 0; i < tiles.size(); i++){
+            Tile tile = tiles.get(i);
+            if (tile.isBlank()){
+                Tile blank = tiles.remove(i);
+                //now we have to set what letter the blank is
+                blank.setRepresentedLetter(character);
+                return blank;
             }
         }
         return null;
