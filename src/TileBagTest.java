@@ -112,6 +112,7 @@ public class TileBagTest {
         assertEquals("Should have 9 A tiles", 9, (int)distribution.get('A'));
         assertEquals("Should have 1 Q tile", 1, (int)distribution.get('Q'));
         assertEquals("Should have 1 Z tile", 1, (int)distribution.get('Z'));
+        assertEquals("Should have 2 BLANK tile", 2, (int)distribution.get(' '));
     }
 
     /**

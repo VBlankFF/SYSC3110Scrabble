@@ -29,7 +29,6 @@ public class Board {
      */
     public Board(){
         this.grid = new Tile[BOARD_SIZE][BOARD_SIZE];
-        //setup the premium squares
         this.premiumSquares = new PremiumSquare[BOARD_SIZE][BOARD_SIZE];
         this.firstWordPlaced = false;
         //initialize the squares

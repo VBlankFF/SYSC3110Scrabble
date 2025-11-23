@@ -130,6 +130,16 @@ public class ScrabbleModelTest {
         int score = model.placeWord(14, 7, 2, "HELLO");
         assertEquals("Word should not fit vertically", 0, score);
     }
+
+    /**
+     * Stuck here
+     */
+    @Test
+    public void testPlaceWordLetterDouble(){
+        model.initializeGame(2, playerNames);
+        model.
+        assertEquals("Word should not fit vertically", 12, score);
+    }
     
     // ========== TILE SWAPPING TESTS ==========
     
@@ -144,7 +154,7 @@ public class ScrabbleModelTest {
         model.initializeGame(2, playerNames);
         // Drain the bag to less than 7 tiles
         while (model.getTilesRemaining() >= 7) {
-            model.getCurrentPlayer().addTile(model.getBoard().getPosition(0, 0)); // dummy
+            model.removeTile();
         }
         boolean result = model.swapTiles("ABC");
         assertFalse("Cannot swap when bag has less than 7 tiles", result);

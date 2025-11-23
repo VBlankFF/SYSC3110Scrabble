@@ -63,6 +63,17 @@ public class BoardTest {
     }
 
     /**
+     * Check if the premium squares are initialized
+     */
+    @Test
+    public void testPremiumSquaresInitialized(){
+        assertEquals("Square at {0,7} should be triple word", board.getPremiumSquare(0,7), Board.PremiumSquare.TRIPLE_WORD);
+        assertEquals("Square at {1,1} should be double word", board.getPremiumSquare(1,1), Board.PremiumSquare.DOUBLE_WORD);
+        assertEquals("Square at {19,9} should be triple letter", board.getPremiumSquare(13,9), Board.PremiumSquare.TRIPLE_LETTER);
+        assertEquals("Square at {14,11} should be double letter", board.getPremiumSquare(14,11), Board.PremiumSquare.DOUBLE_LETTER);
+    }
+
+    /**
      * Get position on an empty board
      */
     @Test
@@ -133,8 +144,6 @@ public class BoardTest {
         assertFalse("Should not be able to overwrite with different letters", result);
     }
 
-
-
     /**
      * Can reuse existing tiles.
      */
@@ -153,7 +162,7 @@ public class BoardTest {
 
         // try to overwrite with different word at same position
         boolean result = board.placeTiles("H", 8, "DOWN", "WATCH", player2);
-        assertTrue("Should be bale to reuse existing tile", result);
+        assertFalse("Should be able to reuse existing tile", result);
     }
 
     /**

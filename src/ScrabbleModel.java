@@ -608,6 +608,9 @@ public class ScrabbleModel {
         return isFirstTurn;
     }
 
+    public void removeTile(){ bagOfTiles.removeRandomTile();}
+
+
 
 
 }

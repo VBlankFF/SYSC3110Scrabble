@@ -75,9 +75,7 @@ public class TileBag {
 
         addTiles('Q', 1); //10 points
         addTiles('Z', 1); //10 points
-        //add 2 blank tiles now
-        tiles.add(new Tile(true));
-        tiles.add(new Tile(true));
+        addTiles(' ', 2);
 
         //we finish with shuffling the tiles so that they aren't in order
         Collections.shuffle(tiles);
@@ -158,5 +156,12 @@ public class TileBag {
      */
     public List<Tile> getTiles(){
         return new ArrayList<>(tiles);
+    }
+
+    /**
+     * Removes a random tile
+     */
+    public void removeRandomTile(){
+        tiles.remove(0);
     }
 }
