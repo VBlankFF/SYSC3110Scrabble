@@ -575,11 +575,11 @@ public class ScrabbleModel {
         }
         if (highestPlay.wordScore > 0)
         {
-            placeWord(highestPlay.xPos, highestPlay.yPos, highestPlay.direction, highestPlay.word, true);
             for (ScrabbleView v : views)
             {
-                v.handleAIPlay(ai.getName(), highestPlay.word, highestPlay.wordScore, ai.getScore());
+                v.handleAIPlay(ai.getName(), highestPlay.word, highestPlay.wordScore, ai.getScore() + highestPlay.wordScore);
             }
+            placeWord(highestPlay.xPos, highestPlay.yPos, highestPlay.direction, highestPlay.word, true);
             return;
         }
         String aiTiles = ai.getTilesAsString();
