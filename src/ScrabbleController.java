@@ -50,7 +50,8 @@ public class ScrabbleController implements ActionListener{
                 System.err.println("This is an unknown action command: " + command);
                 break;
         }
-
+        // Check and do AI turns until it is no longer an AI's turn
+        while (model.CheckAITurn());
     }
 
     /**
@@ -61,6 +62,8 @@ public class ScrabbleController implements ActionListener{
     public void startGame(int numPlayers, String[] playerNames){
         if (model.initializeGame(numPlayers, playerNames)){
             view.showWorked("Game started! " + model.getCurrentPlayer().getName() + "'s turn.");
+            // Check and do AI turns until it is no longer an AI's turn
+            while (model.CheckAITurn());
         } else {
             view.showFailed("Failed to start game. Try again! budday :)");
         }

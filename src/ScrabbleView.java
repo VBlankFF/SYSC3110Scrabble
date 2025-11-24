@@ -15,9 +15,25 @@ public interface ScrabbleView {
      */
     void update();
 
-    public void handleAIPlay(String playerName, String word, int points, int totalPoints);
+    /**
+     * Have views do something to describe the AI's turn and word
+     * @param playerName The name of the (AI) player
+     * @param word The word that was played by the AI
+     * @param points The amount of points the word played was worth
+     * @param totalPoints The AI player's total score after playing the word
+     */
+    void handleAIPlay(String playerName, String word, int points, int totalPoints);
 
-    public void handleAISwap(String playerName, String tiles);
+    /**
+     * Have views do something to listing the tiles the AI swapped
+     * @param playerName The name of the (AI) player
+     * @param tiles The tiles the AI placed in the bag
+     */
+    void handleAISwap(String playerName, String tiles);
 
-    public void handleAIPass(String playerName);
+    /**
+     * Have views do something to state that the AI has passed
+     * @param playerName The name of the (AI) player
+     */
+    void handleAIPass(String playerName);
 }

@@ -389,16 +389,32 @@ public class ScrabbleGUI extends JFrame implements ScrabbleView{
         JOptionPane.showMessageDialog(this, message, "Info", JOptionPane.INFORMATION_MESSAGE);
     }
 
+    /**
+     * Displays a dialogue box describing the AI's turn and word
+     * @param playerName The name of the (AI) player
+     * @param word The word that was played by the AI
+     * @param points The amount of points the word played was worth
+     * @param totalPoints The AI player's total score after playing the word
+     */
     public void handleAIPlay(String playerName, String word, int points, int totalPoints){
         if (!model.isPlaying()){ return; }
         showInfoDialog(playerName + " played " + word + " for " + points + " points. Point total is now " + totalPoints + ".");
     }
 
+    /**
+     * Displays a dialogue box listing the tiles the AI swapped
+     * @param playerName The name of the (AI) player
+     * @param tiles The tiles the AI placed in the bag
+     */
     public void handleAISwap(String playerName, String tiles){
         if (!model.isPlaying()){ return; }
         showInfoDialog(playerName + " swapped, placing " + tiles + " in the bag.");
     }
 
+    /**
+     * Displays a dialogue box stating that the AI has passed
+     * @param playerName The name of the (AI) player
+     */
     public void handleAIPass(String playerName)
     {
         if (!model.isPlaying()){ return; }

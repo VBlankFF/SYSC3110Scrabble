@@ -382,7 +382,8 @@ public class ScrabbleModel {
                         break;
                     }
                     char characterT = t.isBlank() ? t.getRepresentedLetter() : t.getCharacter();
-                    perpenWord += characterT;                    tilesInvolved.add(t);
+                    perpenWord += characterT;
+                    tilesInvolved.add(t);
                     connectedToCurrentTile = true;
                 }
                 if (perpenWord.length() > 1 ){
@@ -532,8 +533,12 @@ public class ScrabbleModel {
             }
         }
         scorelessTurns++;
-        nextPlayer();
-        notifyViews();
+        if (scorelessTurns >= 6){
+            endGame();
+        } else {
+            nextPlayer();
+            notifyViews();
+        }
         return true;
     }
 
@@ -555,12 +560,19 @@ public class ScrabbleModel {
      */
     private void nextPlayer(){
         currentPlayer = (currentPlayer + 1) % playerList.size();
-        if (playerList.get(currentPlayer) instanceof AIPlayer)
-        {
-            doAITurn();
-        }
     }
 
+    public boolean CheckAITurn(){
+        if (playerList.get(currentPlayer) instanceof AIPlayer && isPlaying())
+        {
+            doAITurn();
+            return true;
+        }
+        return false;
+    }
+    /**
+     * Makes the current AI player play their turn, then produces a dialogue box describing their action.
+     */
     private void doAITurn()
     {
         notifyViews();
@@ -575,14 +587,14 @@ public class ScrabbleModel {
         }
         if (highestPlay.wordScore > 0)
         {
+            placeWord(highestPlay.xPos, highestPlay.yPos, highestPlay.direction, highestPlay.word, true);
             for (ScrabbleView v : views)
             {
                 v.handleAIPlay(ai.getName(), highestPlay.word, highestPlay.wordScore, ai.getScore() + highestPlay.wordScore);
             }
-            placeWord(highestPlay.xPos, highestPlay.yPos, highestPlay.direction, highestPlay.word, true);
             return;
         }
-        String aiTiles = ai.getTilesAsString();
+        String aiTiles = ai.getTilesAsString().toUpperCase().replaceAll(" ", "");
         if (swapTiles(aiTiles))
         {
             for (ScrabbleView v : views)
@@ -591,11 +603,12 @@ public class ScrabbleModel {
             }
             return;
         }
+        passTurn();
         for (ScrabbleView v : views)
         {
             v.handleAIPass(ai.getName());
         }
-        passTurn();
+        notifyViews();
     }
 
     /**
