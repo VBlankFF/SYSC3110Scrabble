@@ -14,4 +14,10 @@ public interface ScrabbleView {
      * It is called by the model when a state changes.
      */
     void update();
+
+    public void handleAIPlay(String playerName, String word, int points, int totalPoints);
+
+    public void handleAISwap(String playerName, String tiles);
+
+    public void handleAIPass(String playerName);
 }

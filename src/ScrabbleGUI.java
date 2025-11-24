@@ -228,16 +228,15 @@ public class ScrabbleGUI extends JFrame implements ScrabbleView{
         String[] options = {"2 Players", "3 Players", "4 Players"};
         int choice = JOptionPane.showOptionDialog(this, "Select the number of players:",
                 "New Game", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-
         if (choice >= 0){
             int numPlayers = choice + 2;
             String[] playerNames = new String[numPlayers];
 
             for (int i = 0; i < numPlayers; i++){
                 String name = JOptionPane.showInputDialog(this, "Enter name for Player " +
-                        (i + 1) + ":", "Player " + (i + 1));
+                        (i + 1) + " (Leave empty for AI):", "Player " + (i + 1));
                 if (name == null || name.trim().isEmpty()){
-                    name = "Player " + (i + 1);
+                    name = "AI (player " + (i + 1) + ")";
                 }
                 playerNames[i] = name.trim();
             }
@@ -384,5 +383,25 @@ public class ScrabbleGUI extends JFrame implements ScrabbleView{
     public void showWorked(String message){
         statusLabel.setText(message);
         statusLabel.setForeground(Color.GREEN);
+    }
+
+    public void showInfoDialog(String message){
+        JOptionPane.showMessageDialog(this, message, "Info", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public void handleAIPlay(String playerName, String word, int points, int totalPoints){
+        if (!model.isPlaying()){ return; }
+        showInfoDialog(playerName + " played " + word + " for " + points + " points. Point total is now " + totalPoints + ".");
+    }
+
+    public void handleAISwap(String playerName, String tiles){
+        if (!model.isPlaying()){ return; }
+        showInfoDialog(playerName + " swapped, placing " + tiles + " in the bag.");
+    }
+
+    public void handleAIPass(String playerName)
+    {
+        if (!model.isPlaying()){ return; }
+        showInfoDialog(playerName + " passed.");
     }
 }

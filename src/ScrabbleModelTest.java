@@ -137,8 +137,8 @@ public class ScrabbleModelTest {
     @Test
     public void testPlaceWordLetterDouble(){
         model.initializeGame(2, playerNames);
-        model.
-        assertEquals("Word should not fit vertically", 12, score);
+        //model.
+        //assertEquals("Word should not fit vertically", 12, score);
     }
     
     // ========== TILE SWAPPING TESTS ==========
@@ -297,5 +297,8 @@ public class ScrabbleModelTest {
         public void update() {
             wasUpdated = true;
         }
+        public void handleAIPlay(String word, String highestPlay, int highestPlayScore, int aiScore) {}
+        public void handleAISwap(String playerName, String tiles) {}
+        public void handleAIPass(String playerName) {}
     }
 }

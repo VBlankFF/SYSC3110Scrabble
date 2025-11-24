@@ -82,7 +82,15 @@ public class ScrabbleModel {
 
         //starts the players
         for(int i = 0; i < numPlayers; i++){
-            playerList.add(new Player(0, playerNames[i], i));
+            if (playerNames[i].startsWith("AI"))
+            {
+                playerList.add (new AIPlayer(0, playerNames[i], i));
+            }
+            else
+            {
+                playerList.add(new Player(0, playerNames[i], i));
+            }
+
             while (playerList.get(i).getTiles().size() < 7 && !bagOfTiles.isEmpty()){
                 playerList.get(i).addTile(bagOfTiles.getRandomTile());
             }
@@ -98,9 +106,10 @@ public class ScrabbleModel {
      * @param col colum from 0 to 14
      * @param direction 1 from horizontal which is the right and 2 for vertical which is 2
      * @param word the word to place
+     * @param actuallyPlace if the word should actually be placed on the board (otherwise it's just checking the score)
      * @return the score if valid is >0 or 0 if not
      */
-    public int placeWord(int row, int col, int direction, String word){
+    public int placeWord(int row, int col, int direction, String word, boolean actuallyPlace){
         if(!isPlaying || word == null || word.isEmpty()){
             return 0;
         }
@@ -157,8 +166,12 @@ public class ScrabbleModel {
                 }
             }
         }
+        // the player has to play at least one tile from their hand for the play to be valid
+        if (usedTiles.isEmpty()) { return 0;}
         //calculate the score and validation of word
         int score = scoreCalculation(row, col, direction, word, usedTiles, newTilePositions);
+
+        if (!actuallyPlace){ return score; }
 
         if(score > 0){
             //put the tiles on the board
@@ -197,6 +210,11 @@ public class ScrabbleModel {
         }
 
         return score;
+    }
+
+    public int placeWord(int row, int col, int direction, String word)
+    {
+        return placeWord(row, col, direction, word, true);
     }
 
     /**
@@ -475,7 +493,7 @@ public class ScrabbleModel {
 
     /**
      * It swaps the tiles from current player's hand.
-     * @param swappingTiles string og tile characters to swap
+     * @param swappingTiles string of tile characters to swap
      * @return true if swap worked and false if otherwise.
      */
     public boolean swapTiles(String swappingTiles){
@@ -537,6 +555,47 @@ public class ScrabbleModel {
      */
     private void nextPlayer(){
         currentPlayer = (currentPlayer + 1) % playerList.size();
+        if (playerList.get(currentPlayer) instanceof AIPlayer)
+        {
+            doAITurn();
+        }
+    }
+
+    private void doAITurn()
+    {
+        notifyViews();
+        AIPlayer ai =  (AIPlayer) playerList.get(currentPlayer);
+        AIPlayer.AIPlay highestPlay = new AIPlayer.AIPlay(0, 0, 0, "a");
+        for (AIPlayer.AIPlay play : ai.GetPossibleMoves(this))
+        {
+            play.wordScore = placeWord(play.xPos, play.yPos, play.direction, play.word, false);
+            if (play.wordScore > highestPlay.wordScore){
+                highestPlay = play;
+            }
+        }
+        if (highestPlay.wordScore > 0)
+        {
+            placeWord(highestPlay.xPos, highestPlay.yPos, highestPlay.direction, highestPlay.word, true);
+            for (ScrabbleView v : views)
+            {
+                v.handleAIPlay(ai.getName(), highestPlay.word, highestPlay.wordScore, ai.getScore());
+            }
+            return;
+        }
+        String aiTiles = ai.getTilesAsString();
+        if (swapTiles(aiTiles))
+        {
+            for (ScrabbleView v : views)
+            {
+                v.handleAISwap(ai.getName(), aiTiles);
+            }
+            return;
+        }
+        for (ScrabbleView v : views)
+        {
+            v.handleAIPass(ai.getName());
+        }
+        passTurn();
     }
 
     /**
@@ -609,6 +668,8 @@ public class ScrabbleModel {
     }
 
     public void removeTile(){ bagOfTiles.removeRandomTile();}
+
+    public Dictionary getDictionary(){ return gameDictionary; }
 
 
 

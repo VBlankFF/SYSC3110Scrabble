@@ -10,9 +10,9 @@ import java.util.*;
 
 public class Player {
     private int score;
-    private String name;
+    protected String name;
     private int index;
-    private List<Tile> tiles;
+    protected List<Tile> tiles;
 
     /**
      * Constructor

@@ -1,8 +1,10 @@
 import org.junit.*;
-import static org.junit.Assert.*;
+
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
+
+import static junit.framework.TestCase.*;
 
 public class DictionaryTest {
     private Dictionary dictionary;
