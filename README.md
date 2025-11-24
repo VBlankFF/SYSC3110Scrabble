@@ -1,4 +1,4 @@
-# Milestone 1 SYSC3110 Scrabble Project
+# Milestone 3 SYSC3110 Scrabble Project
 The goal of this project is to reproduce a simplified version of the classic board game Scrabble. 
 
 
@@ -14,3 +14,11 @@ Here is how the work was divided:
 - Aymen Zebentout: Player class, ReadMe
 - Joseph Dereje: Tile class, Dictionary class, Sequence Diagrams
 - Amber: ScrabbleGame class
+
+## AI Strategy
+The strategy of the AI is as follows:
+- Find almost every playable move (The move calculating algorithm does not find every move, but it's reasonably close)
+- Calculate the score and validity of each move
+- Play the valid move with the highest score
+- If there is no valid moves, swap all non-blank tiles
+- If swapping is impossible, pass turn
