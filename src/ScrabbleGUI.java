@@ -181,9 +181,43 @@ public class ScrabbleGUI extends JFrame implements ScrabbleView{
         newGameItem.addActionListener(e-> showNewGameDialog());
         JMenuItem exitItem = new JMenuItem("Exit");
         exitItem.addActionListener(e->System.exit(0));
+        JMenuItem saveGameItem = new JMenuItem("Save Game");
+        saveGameItem.addActionListener(e -> {
+            if (this.model.isPlaying()){
+                String filename = JOptionPane.showInputDialog("Enter filename:");
+                if (filename != null && !filename.trim().isEmpty()){
+                    if (GameSerializer.saveGame(this.model, filename)){
+                        showWorked("Game saved!");
+                    } else {
+                        showFailed("Failed to save game.");
+                    }
+                }
+            }
+        });
+
+        JMenuItem loadGameItem = new JMenuItem("Load Game");
+        loadGameItem.addActionListener(e-> {
+            String filename = JOptionPane.showInputDialog("Enter filename:");
+            if (filename != null && !filename.trim().isEmpty()){
+                ScrabbleModel loaded = GameSerializer.loadGame(filename);
+                if (loaded != null){
+                    this.model = loaded;
+                    this.model.addView(this);
+                    update();
+                    showWorked("Game loaded!");
+                } else {
+                    showFailed("Failed to load the game.");
+                }
+            }
+        });
 
         gameMenu.add(newGameItem);
+        gameMenu.addSeparator();
+        gameMenu.add(saveGameItem);
+        gameMenu.add(loadGameItem);
+        gameMenu.addSeparator();
         gameMenu.add(exitItem);
+
         menuBar.add(gameMenu);
         setJMenuBar(menuBar);
 
@@ -292,7 +326,7 @@ public class ScrabbleGUI extends JFrame implements ScrabbleView{
             if (!model.isPlaying() || model.getPlayerList().isEmpty()) {
                 currentPlayerLabel.setText("The Game has not started yet bud!");
                 scoreLabel.setText("Score: 0");
-                tilesRemainingLabel.setText("Tiles in bag: 100");
+                tilesRemainingLabel.setText("Tiles in bag: " + model.getTilesRemaining());
                 for (int i = 0; i < 7; i++) {
                     handButtons[i].setText("");
                 }

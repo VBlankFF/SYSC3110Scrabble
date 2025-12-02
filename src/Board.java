@@ -1,15 +1,17 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.io.Serializable;
 
 /**
  * Board class for Scrabble game is a 15x15 game board.
  * It handles tile placement, position, validation, and also baord management
  *
  * @author Emmanuel Konate 101322259
- * @version 2.0
+ * @version 3.0
  */
 
-public class Board {
+public class Board implements Serializable{
+    private static final long serialVersionUID = 1L;
 
     //board size is 15x15 and there is a center area which is [7][7]
     private static final int BOARD_SIZE = 15;

@@ -1,12 +1,15 @@
 import java.util.Objects;
+import java.io.Serializable;
 /**
  * Tile class for Scrabble game.
  * Represents a Tile.
  * @author Joseph Dereje, Esli Emmanuel Konate
- * @version 2.0
+ * @version 3.0
  */
 
-public class Tile {
+public class Tile implements Serializable{
+    private static final long serialVersionUID = 1L;
+
     private final char character;
     private final int value;
     private final boolean isBlank;

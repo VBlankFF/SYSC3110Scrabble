@@ -1,4 +1,7 @@
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
+import java.io.*;
 
 /**
  * Model class for the Scrabble game with MVC pattern.
@@ -6,19 +9,22 @@ import java.util.*;
  * It notifies the views when the model changes with Observer pattern.
  *
  * @author Emmanuel Konate, Amber Skinner, Joseph Dereje, Aymen Zebentout
- * @version 2.0
+ * @version 3.0
  */
 
-public class ScrabbleModel {
-    private List<ScrabbleView> views;
+public class ScrabbleModel implements Serializable{
+    private static final long serialVersionUID = 1L;
+
+    private transient List<ScrabbleView> views;
     private List<Player> playerList;
     private Board gameBoard;
     private int currentPlayer;
     private boolean isPlaying;
-    private Dictionary gameDictionary;
+    private transient Dictionary gameDictionary;
     private TileBag bagOfTiles;
     private boolean isFirstTurn;
     private int scorelessTurns;
+
 
     /**
      * This is a constructor for ScrabbleModel
@@ -35,6 +41,7 @@ public class ScrabbleModel {
         isFirstTurn = true;
         scorelessTurns = 0;
     }
+
 
     /**
      * Adds a view for notification when model changes
@@ -684,7 +691,11 @@ public class ScrabbleModel {
 
     public Dictionary getDictionary(){ return gameDictionary; }
 
-
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException{
+        in.defaultReadObject();
+        views = new ArrayList<>(); //here we reset the views
+        gameDictionary = new Dictionary(); // here we recreate a dictionary
+    }
 
 
 }

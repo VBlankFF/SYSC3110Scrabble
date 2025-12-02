@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -6,13 +7,15 @@ import java.util.*;
  * It also gives ways to draw random tiles and check if empty.
  *
  * @author Emmanuel Konate 101322259
- * @version 2.0
+ * @version 3.0
  */
 
-public class TileBag {
+public class TileBag implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     //fields and instances
     private List<Tile> tiles;
-    private Random random;
+    private transient Random random;
 
     /**
      * Constructor starts the tile bag with 100 tiles.
@@ -163,5 +166,10 @@ public class TileBag {
      */
     public void removeRandomTile(){
         tiles.remove(0);
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException{
+        in.defaultReadObject();
+        random = new Random(); // here we reset random
     }
 }

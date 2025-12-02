@@ -1,14 +1,17 @@
 import java.util.*;
+import java.io.Serializable;
 
 /**
  * Player class for Scrabble game.
  * Represents a player with their tiles, score, and index.
  * @author Aymen Zebentout, Esli Emmanuel Konate
- * @version 2.0
- * @since 10/26/2025
+ * @version 3.0
+ * @since 11/27/2025
  */
 
-public class Player {
+public class Player implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private int score;
     protected String name;
     private int index;
