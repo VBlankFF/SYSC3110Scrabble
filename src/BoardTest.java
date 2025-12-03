@@ -247,5 +247,19 @@ public class BoardTest {
         assertTrue("Method worked successfully", true);
     }
 
+    /**
+     * test if the board gets updated when choosing a different type
+     */
+    @Test
+    public void testBoardType(){
+        assertEquals(board.getBoardType(), 0);
+        assertEquals(board.getPremiumSquare(0, 0), Board.PremiumSquare.TRIPLE_WORD);
+        assertEquals(board.getPremiumSquare(1, 0), Board.PremiumSquare.NORMAL);
+        board.setBoardselection(2);
+        assertEquals(board.getBoardType(), 2);
+        assertEquals(board.getPremiumSquare(1, 1), Board.PremiumSquare.TRIPLE_LETTER);
+        assertEquals(board.getPremiumSquare(1, 2), Board.PremiumSquare.NORMAL);
+    }
+
 
 }

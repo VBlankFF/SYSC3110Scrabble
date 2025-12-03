@@ -25,6 +25,7 @@ public class Board implements Serializable{
     private Tile[][] grid;
     private PremiumSquare[][] premiumSquares;
     private boolean firstWordPlaced;
+    private int boardselection = 0;
 
     /**
      * Constructor initializing the empty 15x15 board.
@@ -34,7 +35,7 @@ public class Board implements Serializable{
         this.premiumSquares = new PremiumSquare[BOARD_SIZE][BOARD_SIZE];
         this.firstWordPlaced = false;
         //initialize the squares
-        initializePremiumSquares();
+        initializePremiumSquares(boardselection);
     }
 
     /**
@@ -134,7 +135,7 @@ public class Board implements Serializable{
 
         //checks that the tiles are not overwriting current tiles
         if(!canPlaceTiles(row, col, direction, word)){
-            System.out.println("Cannot overwrite exisiting tiles!");
+            System.out.println("Cannot overwrite existing tiles!");
             return false;
         }
 
@@ -343,36 +344,59 @@ public class Board implements Serializable{
     /**
      * This method initializes the premium squares.
      */
-    private void initializePremiumSquares(){
+    private void initializePremiumSquares(int typeOfBoard){
         //setup all squares as Normal
         for (int i = 0; i < BOARD_SIZE; i++){
             for (int j = 0; j < BOARD_SIZE; j++){
                 premiumSquares[i][j] = PremiumSquare.NORMAL;
             }
         }
-        //triple  word score in red
-        int[][] triplews = {{0,0}, {0,7}, {0,14}, {7,0}, {7,14}, {14, 0}, {14, 7}, {14, 14}};
-        for (int[] pos : triplews){
-            premiumSquares[pos[0]][pos[1]] = PremiumSquare.TRIPLE_WORD;
+        if (typeOfBoard == 0) { //standard board
+            //triple  word score in red
+            int[][] triplews = {{0, 0}, {0, 7}, {0, 14}, {7, 0}, {7, 14}, {14, 0}, {14, 7}, {14, 14}};
+            for (int[] pos : triplews) {
+                premiumSquares[pos[0]][pos[1]] = PremiumSquare.TRIPLE_WORD;
+            }
+            //double  word score in pink
+            int[][] doublews = {{1, 1}, {2, 2}, {3, 3}, {4, 4}, {7, 7}, {10, 10}, {11, 11}, {12, 12}, {13, 13},
+                    {1, 13}, {2, 12}, {3, 11}, {4, 10}, {10, 4}, {11, 3}, {12, 2}, {13, 1},
+                    {7, 7}};
+            for (int[] pos : doublews) {
+                premiumSquares[pos[0]][pos[1]] = PremiumSquare.DOUBLE_WORD;
+            }
+            //triple  Letter score in darker blue
+            int[][] triplels = {{1, 5}, {1, 9}, {5, 1}, {5, 5}, {5, 9}, {5, 13}, {9, 1}, {9, 5}, {9, 9}, {9, 13}, {13, 5}, {13, 9}};
+            for (int[] pos : triplels) {
+                premiumSquares[pos[0]][pos[1]] = PremiumSquare.TRIPLE_LETTER;
+            }
+            //double  letter score in light blue
+            int[][] doublels = {{0, 3}, {0, 11}, {2, 6}, {2, 8}, {3, 0}, {3, 7}, {3, 14}, {6, 2}, {6, 6}, {6, 8}, {6, 12},
+                    {7, 3}, {7, 11}, {8, 2}, {8, 6}, {8, 8}, {8, 12}, {11, 0}, {11, 7}, {11, 14}, {12, 6}, {12, 8}, {14, 3},
+                    {14, 11}};
+            for (int[] pos : doublels) {
+                premiumSquares[pos[0]][pos[1]] = PremiumSquare.DOUBLE_LETTER;
+            }
         }
-        //double  word score in pink
-        int[][] doublews = {{1,1}, {2,2}, {3,3}, {4,4}, {7,7}, {10, 10}, {11, 11}, {12, 12}, {13,13},
-                {1,13}, {2,12}, {3,11}, {4,10}, {10,4}, {11,3}, {12,2}, {13,1},
-                {7,7}};
-        for (int[] pos : doublews){
-            premiumSquares[pos[0]][pos[1]] = PremiumSquare.DOUBLE_WORD;
+        else if (typeOfBoard == 1){ //al double board
+            //double  letter score in light blue
+            int[][] doublels = {{0, 3}, {0, 11}, {2, 6}, {2, 8}, {3, 0}, {3, 7}, {3, 14}, {6, 2}, {6, 6}, {6, 8}, {6, 12},
+                    {7, 3}, {7, 11}, {8, 2}, {8, 6}, {8, 8}, {8, 12}, {11, 0}, {11, 7}, {11, 14}, {12, 6}, {12, 8}, {14, 3},
+                    {14, 11}, {0, 0}, {0, 7}, {0, 14}, {7, 0}, {7, 14}, {14, 0}, {14, 7}, {14, 14}, {1, 1}, {2, 2}, {3, 3}, {4, 4}, {7, 7}, {10, 10}, {11, 11}, {12, 12}, {13, 13},
+                    {1, 13}, {2, 12}, {3, 11}, {4, 10}, {10, 4}, {11, 3}, {12, 2}, {13, 1},
+                    {7, 7}, {1, 5}, {1, 9}, {5, 1}, {5, 5}, {5, 9}, {5, 13}, {9, 1}, {9, 5}, {9, 9}, {9, 13}, {13, 5}, {13, 9}};
+            for (int[] pos : doublels) {
+                premiumSquares[pos[0]][pos[1]] = PremiumSquare.DOUBLE_LETTER;
+            }
         }
-        //triple  Letter score in darker blue
-        int[][] triplels = {{1,5}, {1,9}, {5,1}, {5,5}, {5,9}, {5, 13}, {9, 1}, {9, 5}, {9, 9}, {9, 13}, {13, 5}, {13, 9}};
-        for (int[] pos : triplels){
-            premiumSquares[pos[0]][pos[1]] = PremiumSquare.TRIPLE_LETTER;
-        }
-        //double  letter score in light blue
-        int[][] doublels = {{0,3}, {0, 11}, {2,6}, {2,8}, {3,0}, {3, 7}, {3, 14}, {6, 2}, {6, 6}, {6, 8}, {6, 12},
-                {7, 3}, {7, 11}, {8, 2}, {8, 6}, {8, 8}, {8, 12}, {11, 0}, {11, 7}, {11, 14}, {12, 6}, {12, 8}, {14, 3},
-                {14, 11}};
-        for (int[] pos : doublels){
-            premiumSquares[pos[0]][pos[1]] = PremiumSquare.DOUBLE_LETTER;
+        else if (typeOfBoard == 2){
+            int[][] triplels = {{0, 3}, {0, 11}, {2, 6}, {2, 8}, {3, 0}, {3, 7}, {3, 14}, {6, 2}, {6, 6}, {6, 8}, {6, 12},
+                    {7, 3}, {7, 11}, {8, 2}, {8, 6}, {8, 8}, {8, 12}, {11, 0}, {11, 7}, {11, 14}, {12, 6}, {12, 8}, {14, 3},
+                    {14, 11}, {0, 0}, {0, 7}, {0, 14}, {7, 0}, {7, 14}, {14, 0}, {14, 7}, {14, 14}, {1, 1}, {2, 2}, {3, 3}, {4, 4}, {7, 7}, {10, 10}, {11, 11}, {12, 12}, {13, 13},
+                    {1, 13}, {2, 12}, {3, 11}, {4, 10}, {10, 4}, {11, 3}, {12, 2}, {13, 1},
+                    {7, 7}, {1, 5}, {1, 9}, {5, 1}, {5, 5}, {5, 9}, {5, 13}, {9, 1}, {9, 5}, {9, 9}, {9, 13}, {13, 5}, {13, 9}};
+            for (int[] pos : triplels) {
+                premiumSquares[pos[0]][pos[1]] = PremiumSquare.TRIPLE_LETTER;
+            }
         }
     }
 
@@ -497,5 +521,14 @@ public class Board implements Serializable{
      */
     public boolean isFirstWordPlaced(){
         return firstWordPlaced;
+    }
+
+    public void setBoardselection(int boardtype){
+        boardselection = boardtype;
+        initializePremiumSquares(boardtype);
+    }
+
+    public int getBoardType(){
+        return boardselection;
     }
 }

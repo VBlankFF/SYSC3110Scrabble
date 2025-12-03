@@ -179,6 +179,16 @@ public class ScrabbleGUI extends JFrame implements ScrabbleView{
         JMenu gameMenu = new JMenu("Game");
         JMenuItem newGameItem = new JMenuItem("New Game");
         newGameItem.addActionListener(e-> showNewGameDialog());
+        JMenu selectBoardMenu = new JMenu("Select Board");
+        JMenuItem standardBoard = new JMenuItem("Standard");
+        standardBoard.addActionListener(e-> setBoardselection(0));
+        selectBoardMenu.add(standardBoard);
+        JMenuItem premiumAllDouble = new JMenuItem("Premium All Double");
+        premiumAllDouble.addActionListener(e-> setBoardselection(1));
+        selectBoardMenu.add(premiumAllDouble);
+        JMenuItem premiumAllTriple = new JMenuItem("Premium All Triple");
+        premiumAllTriple.addActionListener(e-> setBoardselection(2));
+        selectBoardMenu.add(premiumAllTriple);
         JMenuItem exitItem = new JMenuItem("Exit");
         exitItem.addActionListener(e->System.exit(0));
         JMenuItem saveGameItem = new JMenuItem("Save Game");
@@ -212,6 +222,7 @@ public class ScrabbleGUI extends JFrame implements ScrabbleView{
         });
 
         gameMenu.add(newGameItem);
+        gameMenu.add(selectBoardMenu);
         gameMenu.addSeparator();
         gameMenu.add(saveGameItem);
         gameMenu.add(loadGameItem);
@@ -454,4 +465,10 @@ public class ScrabbleGUI extends JFrame implements ScrabbleView{
         if (!model.isPlaying()){ return; }
         showInfoDialog(playerName + " passed.");
     }
+
+    public void setBoardselection(int boardtype){
+        model.getBoard().setBoardselection(boardtype);
+        model.notifyViews();
+    }
+
 }
