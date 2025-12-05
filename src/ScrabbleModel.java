@@ -24,6 +24,8 @@ public class ScrabbleModel implements Serializable{
     private TileBag bagOfTiles;
     private boolean isFirstTurn;
     private int scorelessTurns;
+    private List<GameHistory> history;
+    private int pointInHistory;
 
 
     /**
@@ -86,6 +88,8 @@ public class ScrabbleModel implements Serializable{
         playerList = new ArrayList<>();
         scorelessTurns = 0;
         bagOfTiles = new TileBag();
+        history = new ArrayList<>();
+        pointInHistory = 0;
 
         //starts the players
         for(int i = 0; i < numPlayers; i++){
@@ -120,6 +124,7 @@ public class ScrabbleModel implements Serializable{
         if(!isPlaying || word == null || word.isEmpty()){
             return 0;
         }
+        GameHistory hist = new GameHistory();
 
         //get the current player
         Player player = playerList.get(currentPlayer);
@@ -178,6 +183,8 @@ public class ScrabbleModel implements Serializable{
         //calculate the score and validation of word
         int score = scoreCalculation(row, col, direction, word, usedTiles, newTilePositions);
 
+        hist.newTilePositions = newTilePositions;
+
         if (!actuallyPlace){ return score; }
 
         if(score > 0){
@@ -195,19 +202,26 @@ public class ScrabbleModel implements Serializable{
                     }
                     gameBoard.placeTile(r, c, tile);
                     player.getTiles().remove(tile);
+                    hist.playedTiles.add(tile);
                     tileIndex++;
                 }
             }
             //now we update the score
             player.addScore(score);
+            hist.scoreGained = score;
+            hist.playerId = currentPlayer;
             isFirstTurn = false;
             scorelessTurns = 0;
 
             //now we refill the player's hand
             while (player.getTiles().size() < 7 && !bagOfTiles.isEmpty()){
-                player.addTile(bagOfTiles.getRandomTile());
+                Tile drawnTile = bagOfTiles.getRandomTile();
+                player.addTile(drawnTile);
+                hist.gainedTiles.add(drawnTile);
             }
             //check if the game has to end, like the player is out of tiles
+            addGameHistory(hist);
+
             if (player.getTiles().isEmpty()){
                 endGame();
             } else {
@@ -222,6 +236,21 @@ public class ScrabbleModel implements Serializable{
     public int placeWord(int row, int col, int direction, String word)
     {
         return placeWord(row, col, direction, word, true);
+    }
+
+    /**
+     * Removes every GameHistory that is past the current point in history, then adds hist to the
+     * end of GameHistory and moves the point in history forward 1 state.
+     * @param hist the GameHistory to add to the end of history.
+     */
+    public void addGameHistory(GameHistory hist)
+    {
+        while(pointInHistory < history.size() - 1)
+        {
+            history.removeLast();
+        }
+        history.add(hist);
+        pointInHistory++;
     }
 
     /**
@@ -504,41 +533,48 @@ public class ScrabbleModel implements Serializable{
      * @param swappingTiles string of tile characters to swap
      * @return true if swap worked and false if otherwise.
      */
-    public boolean swapTiles(String swappingTiles){
-    if(!isPlaying || bagOfTiles.getRemainingTiles() < 7){
-        return false;
-    }
-
-    Player player = playerList.get(currentPlayer);
-    List<Tile> playerTiles = player.getTiles();
-    List<Tile> removedTiles = new ArrayList<>();
-
-    //remove tiles from the hand
-    for (char c : swappingTiles.toUpperCase().toCharArray()){
-        boolean found = false;
-        for (int i = 0; i < playerTiles.size(); i++){
-            if (playerTiles.get(i).getCharacter() == c){
-                removedTiles.add(playerTiles.remove(i));
-                found = true;
-                break;
-            }
-        }
-        if (!found){
-            //bring back the tiles that failed
-            playerTiles.addAll(removedTiles);
+    public boolean swapTiles(String swappingTiles)
+    {
+        if(!isPlaying || bagOfTiles.getRemainingTiles() < 7){
             return false;
         }
-    }
+
+        Player player = playerList.get(currentPlayer);
+        List<Tile> playerTiles = player.getTiles();
+        List<Tile> removedTiles = new ArrayList<>();
+        GameHistory hist =  new GameHistory();
+        hist.playerId = currentPlayer;
+
+        //remove tiles from the hand
+        for (char c : swappingTiles.toUpperCase().toCharArray()){
+            boolean found = false;
+            for (int i = 0; i < playerTiles.size(); i++){
+                if (playerTiles.get(i).getCharacter() == c){
+                    removedTiles.add(playerTiles.remove(i));
+                    found = true;
+                    break;
+                }
+            }
+            if (!found){
+                //bring back the tiles that failed
+                playerTiles.addAll(removedTiles);
+                return false;
+            }
+        }
         //return the tiles to the bag and bring new ones
+        hist.swappedTiles = removedTiles;
         for (Tile t : removedTiles){
             bagOfTiles.returnTile(t);
         }
 
         for (int i = 0; i < removedTiles.size(); i++){
             if (!bagOfTiles.isEmpty()){
-                player.addTile(bagOfTiles.getRandomTile());
+                Tile drawnTile = bagOfTiles.getRandomTile();
+                player.addTile(drawnTile);
+                hist.gainedTiles.add(drawnTile);
             }
         }
+        addGameHistory(hist);
         scorelessTurns++;
         if (scorelessTurns >= 6){
             endGame();
@@ -554,12 +590,139 @@ public class ScrabbleModel implements Serializable{
      */
     public void passTurn(){
         scorelessTurns++;
+        GameHistory hist =  new GameHistory();
+        hist.playerId = currentPlayer;
+        addGameHistory(hist);
         if (scorelessTurns >= 6){
             endGame();
         } else {
             nextPlayer();
         }
         notifyViews();
+    }
+
+    /**
+     * Returns true if undoing is possible, false otherwise.
+     * @return true if undoing is possible, false otherwise
+     */
+    public boolean canUndo()
+    {
+        return pointInHistory > 0;
+    }
+
+    /**
+     * Undoes the changes stored in the current GameHistory. This tries to maintain randomization (keep the tiles
+     * drawn the same if the same play is done). Swapping may rerandomize drawn tiles.
+     */
+    public void undo()
+    {
+        GameHistory undoPoint =  history.get(pointInHistory - 1);
+        currentPlayer = undoPoint.playerId;
+        Player player = playerList.get(currentPlayer);
+        // Remove the newly played tiles from the board
+        for (int[] positions : undoPoint.newTilePositions)
+        {
+            gameBoard.removeTile(positions[0], positions[1]);
+        }
+        // Get the tiles added to the player's hand and place them back in the bag
+        // This is done back to front, since that's the opposite way they are added to hand
+        for (int tileIndex = undoPoint.gainedTiles.size() - 1; tileIndex >= 0; tileIndex--)
+        {
+            Tile tile = undoPoint.gainedTiles.get(tileIndex);
+            // If this is the same tile as the one in the player's hand, remove it from their hand
+            for (int i = player.tiles.size() - 1; i >= 0; i--)
+            {
+                if (player.tiles.get(i).equals(tile)){
+                    player.tiles.remove(i);
+                    // add it back to the front of the bag, where tiles are drawn from
+                    bagOfTiles.addTileToStart(tile);
+                    break;
+                }
+            }
+        }
+        // Remove tiles added to the bag after a swap, and add them back to the player's hand.
+        // This may not keep randomization consistent.
+        for (Tile tile : undoPoint.swappedTiles)
+        {
+            bagOfTiles.removeTile(tile);
+            player.addTile(tile);
+        }
+        // Return the tiles the player played to their hand
+        for (Tile tile : undoPoint.playedTiles)
+        {
+            if (tile.isBlank())
+            {
+                tile.setRepresentedLetter(' ');
+            }
+            player.addTile(tile);
+        }
+        // Remove the score the player gained
+        player.addScore(-undoPoint.scoreGained);
+        pointInHistory--;
+        notifyViews();
+        // AI players immediately replay the turn if we let them play, so undo past their turn
+        if (playerList.get(currentPlayer) instanceof AIPlayer)
+        {
+            undo();
+        }
+    }
+
+    /**
+     * Returns true if redoing is possible, false otherwise.
+     * @return true if redoing is possible, false otherwise
+     */
+    public boolean canRedo()
+    {
+        return pointInHistory < history.size();
+    }
+
+    /**
+     * Redoes the next play in the history ("un-undoes it"). This likely breaks randomization on swaps.
+     */
+    public void redo()
+    {
+        GameHistory redoPoint =  history.get(pointInHistory);
+        currentPlayer = redoPoint.playerId;
+        Player player = playerList.get(currentPlayer);
+        // Add the played tiles back onto the board
+        for (int i = 0; i < redoPoint.newTilePositions.size(); i++)
+        {
+            int[] positions = redoPoint.newTilePositions.get(i);
+            gameBoard.placeTile(positions[0], positions[1], redoPoint.playedTiles.get(i));
+        }
+        // Remove the swapped tiles from the player's hand and add them back to the bag.
+        // This may not keep randomization consistent.
+        for (Tile tile : redoPoint.swappedTiles)
+        {
+            player.removeTile(tile.getCharacter());
+            bagOfTiles.returnTile(tile);
+        }
+        // Remove the tiles the player played from their hand
+        for (Tile tile : redoPoint.playedTiles)
+        {
+            player.removeTile(tile.getCharacter());
+        }
+        // Readd the tiles the player drew to their hand and remove them from the bag
+        for (Tile tile : redoPoint.gainedTiles)
+        {
+            player.addTile(tile);
+            bagOfTiles.removeTile(tile);
+        }
+
+        // Readd the score the player gained
+        player.addScore(redoPoint.scoreGained);
+        pointInHistory++;
+        currentPlayer++;
+        if (currentPlayer == playerList.size())
+        {
+            currentPlayer = 0;
+        }
+        notifyViews();
+        // AI players would ruin the redo stack if we let them play, so redo over their turn
+        if (playerList.get(currentPlayer) instanceof AIPlayer)
+        {
+            redo();
+        }
     }
 
     /**

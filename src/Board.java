@@ -96,6 +96,16 @@ public class Board implements Serializable{
     }
 
     /**
+     * Removes a tile from the board.
+     * @param x The x position of the tile to be removed
+     * @param y The y position of the tile to be removed
+     */
+    public void removeTile(int x, int y)
+    {
+        grid[x][y] = null;
+    }
+
+    /**
      * Gets the tile at a specific position.
      * It is used by ScrabbleGame
      *

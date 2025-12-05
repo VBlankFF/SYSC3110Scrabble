@@ -46,12 +46,28 @@ public class ScrabbleController implements ActionListener{
                 handlePassTurn();
                 break;
 
+            case "UNDO":
+                handleUndo();
+                break;
+
+            case "REDO":
+                handleRedo();
+                break;
+
             default:
                 System.err.println("This is an unknown action command: " + command);
                 break;
         }
         // Check and do AI turns until it is no longer an AI's turn
         while (model.CheckAITurn());
+    }
+
+    private void handleUndo() {
+        model.undo();
+    }
+
+    private void handleRedo() {
+        model.redo();
     }
 
     /**

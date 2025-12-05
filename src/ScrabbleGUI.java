@@ -26,6 +26,8 @@ public class ScrabbleGUI extends JFrame implements ScrabbleView{
     private JButton placeWordButton;
     private JButton swapTilesButton;
     private JButton passTurnButton;
+    private JButton undoButton;
+    private JButton redoButton;
     private JLabel statusLabel;
     private JLabel tilesRemainingLabel;
 
@@ -160,9 +162,17 @@ public class ScrabbleGUI extends JFrame implements ScrabbleView{
        passTurnButton = new JButton("Pass Turn");
        passTurnButton.setFont(new Font("Arial", Font.BOLD, 14));
        passTurnButton.setEnabled(false);
+       undoButton = new JButton("Undo");
+       undoButton.setFont(new Font("Arial", Font.BOLD, 14));
+       undoButton.setEnabled(false);
+       redoButton = new JButton("Redo");
+       redoButton.setFont(new Font("Arial", Font.BOLD, 14));
+       redoButton.setEnabled(false);
        controlPanel.add(placeWordButton);
        controlPanel.add(swapTilesButton);
        controlPanel.add(passTurnButton);
+       controlPanel.add(undoButton);
+       controlPanel.add(redoButton);
        //status label
         statusLabel = new JLabel("Click  New Game to start", SwingConstants.CENTER);
         statusLabel.setFont(new Font("Arial", Font.ITALIC, 12));
@@ -260,10 +270,14 @@ public class ScrabbleGUI extends JFrame implements ScrabbleView{
         placeWordButton.setActionCommand("PLACE_WORD");
         swapTilesButton.setActionCommand("SWAP_TILES");
         passTurnButton.setActionCommand("PASS_TURN");
+        undoButton.setActionCommand("UNDO");
+        redoButton.setActionCommand("REDO");
         //now we add the controller as listener
         placeWordButton.addActionListener(controller);
         swapTilesButton.addActionListener(controller);
         passTurnButton.addActionListener(controller);
+        undoButton.addActionListener(controller);
+        redoButton.addActionListener(controller);
     }
 
     /**
@@ -368,6 +382,8 @@ public class ScrabbleGUI extends JFrame implements ScrabbleView{
         placeWordButton.setEnabled(playing);
         swapTilesButton.setEnabled(playing && model.getTilesRemaining() >= 7);
         passTurnButton.setEnabled(playing);
+        undoButton.setEnabled(playing && model.canUndo());
+        redoButton.setEnabled(playing && model.canRedo());
         //update the status
         if (!model.isPlaying()){
             if (model.getPlayerList().isEmpty()){

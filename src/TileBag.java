@@ -97,6 +97,15 @@ public class TileBag implements Serializable {
     }
 
     /**
+     * Removes the provided tile from the bag.
+     * @param tile The tile to remove from the bag
+     */
+    public void removeTile(Tile tile)
+    {
+        tiles.remove(tile);
+    }
+
+    /**
      * Checks if the tile bag is empty.
      *
      * @return true if there are no tiles remaining and false if otherwise
@@ -134,6 +143,14 @@ public class TileBag implements Serializable {
     }
 
     /**
+     * Adds a tile to the top of the bag. Used when undoing draws to maintain the order.
+     * @param tile The tile to add to the bag.
+     */
+    public void addTileToStart(Tile tile){
+        tiles.addFirst(tile);
+    }
+
+    /**
      * Gets the number of tiles remaining in the bag.
      * Used for Test purposes in TileBagTest
      * @return the number of tiles still remaining in the bag
@@ -165,7 +182,7 @@ public class TileBag implements Serializable {
      * Removes a random tile
      */
     public void removeRandomTile(){
-        tiles.remove(0);
+        tiles.removeFirst();
     }
 
     private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException{
