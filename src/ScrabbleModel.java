@@ -24,8 +24,8 @@ public class ScrabbleModel implements Serializable{
     private TileBag bagOfTiles;
     private boolean isFirstTurn;
     private int scorelessTurns;
-    private List<GameHistory> history;
-    private int pointInHistory;
+    private transient List<GameHistory> history;
+    private transient int pointInHistory;
 
 
     /**
@@ -858,6 +858,8 @@ public class ScrabbleModel implements Serializable{
         in.defaultReadObject();
         views = new ArrayList<>(); //here we reset the views
         gameDictionary = new Dictionary(); // here we recreate a dictionary
+        history = new ArrayList<GameHistory>();
+        pointInHistory = 0;
     }
 
 
