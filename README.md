@@ -1,4 +1,4 @@
-# Milestone 3 SYSC3110 Scrabble Project
+# Milestone 4 SYSC3110 Scrabble Project
 The goal of this project is to reproduce a simplified version of the classic board game Scrabble. 
 
 
