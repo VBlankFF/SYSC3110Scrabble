@@ -1,10 +1,15 @@
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * GameHistory is a class that keeps track of the changes to the game state that happened in a given turn.
+ * @author Amber Skinner
+ */
 public class GameHistory {
     public int playerId;
     public int scoreGained;
     public List<Tile> playedTiles;
+    // Tiles drawn from the bag
     public List<Tile> gainedTiles;
     public List<Tile> swappedTiles;
     public List<int[]> newTilePositions;
