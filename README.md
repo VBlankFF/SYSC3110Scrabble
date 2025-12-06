@@ -15,7 +15,7 @@ During milestone 4, we added undo/redo, save/load game , and 3 custom boards to 
 ## Project Division
 Here is how the work was divided:
 
-- Emmanuel Konate: Board class, TileBag class, UMLs, Data Structure Explanation
+- Emmanuel Konate: Board class, TileBag class, UMLs, Data Structure Explanation, serialization
 - Aymen Zebentout: Player class, ReadMe
 - Joseph Dereje: Tile class, Dictionary class, Sequence Diagrams
 - Amber: ScrabbleGame class, AIPlayer class, GameHistory class and undo/redo functionality
@@ -27,3 +27,13 @@ The strategy of the AI is as follows:
 - Play the valid move with the highest score
 - If there is no valid moves, swap all non-blank tiles
 - If swapping is impossible, pass turn
+
+## Serialization Strategy
+The strategy for serialization is as follows:
+- Initialize a game with a board.
+- Start playing the game.
+- If need to end the game but want to save the game state, click the menu and click save game.
+- You will be prompted to input a name for your saved game.
+- After savving the game if you want to go back to that saved game, click the menu and select load game.
+- Input the name of your saved game and confirm.
+- Your previously saved game will then be loaded.
