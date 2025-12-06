@@ -18,7 +18,7 @@ Here is how the work was divided:
 - Emmanuel Konate: Board class, TileBag class, UMLs, Data Structure Explanation
 - Aymen Zebentout: Player class, ReadMe
 - Joseph Dereje: Tile class, Dictionary class, Sequence Diagrams
-- Amber: ScrabbleGame class, AIPlayer class
+- Amber: ScrabbleGame class, AIPlayer class, GameHistory class and undo/redo functionality
 
 ## AI Strategy
 The strategy of the AI is as follows:
