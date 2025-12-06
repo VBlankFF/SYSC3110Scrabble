@@ -34,6 +34,6 @@ The strategy for serialization is as follows:
 - Start playing the game.
 - If need to end the game but want to save the game state, click the menu and click save game.
 - You will be prompted to input a name for your saved game.
-- After savving the game if you want to go back to that saved game, click the menu and select load game.
+- After saving the game if you want to go back to that saved game, click the menu and select load game.
 - Input the name of your saved game and confirm.
 - Your previously saved game will then be loaded.
