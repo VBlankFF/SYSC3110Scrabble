@@ -10,6 +10,8 @@ During milestone 2, the project should implement a GUI version of the game inste
 
 During milestone 3, blank tiles and premium squares were added to the game. Also, users can now play against AI players. The deliverables includes the code, UML diagrams, and documentations.
 
+During milestone 4, we added undo/redo, save/load game , and 3 custom boards to select from features. We also did a User Manual
+
 ## Project Division
 Here is how the work was divided:
 
