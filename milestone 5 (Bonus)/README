@@ -1,16 +1,16 @@
-# Milestone 5 (Bonus README)
+- Milestone 5 (Bonus README)
 
-## Emmanuel Konate 101322259 implemented a background picture for the board.
+-- Emmanuel Konate 101322259 implemented a background picture for the board.
 
-## Feature Selected: Feature 1: Images (Background Image)
+-- Feature Selected: Feature 1: Images (Background Image)
 
-### Description
+--- Description
 Added a background image to the Scrabble game board. The image displays behind the tiles through the gaps and transparent squares.
 
-### How to Use
+--- How to Use
 Run the game -> The background image loads automatically and shows behind the board.
 
-### Implementation (ScrabbleGUI.java)
+--- Implementation (ScrabbleGUI.java)
 
 ***Changes made:**
 1. Added 'backgroundImage' variable
