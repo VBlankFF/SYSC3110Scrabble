@@ -6,7 +6,6 @@ import java.io.Serializable;
  * Board class for Scrabble game is a 15x15 game board.
  * It handles tile placement, position, validation, and also baord management
  *
- * @author Emmanuel Konate 101322259
  * @version 3.0
  */
 

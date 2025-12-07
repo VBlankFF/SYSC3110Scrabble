@@ -1,7 +1,6 @@
 /**
  * This is the main class to start the Scrabble game with MVC.
  * It sets up the model, view, and controller and links them.
- * @author Esli Emmanuel Konate, Ayment Zebentout, Joseph Dereje, Amber Skinner
  * @version 2.0
  */
 public class Main {

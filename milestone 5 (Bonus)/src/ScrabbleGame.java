@@ -3,7 +3,6 @@ import java.util.*;
 /**
  * A class that models a game of Scrabble.
  *
- * @author Amber Skinner
  * @version 1.0
  */
 

@@ -3,7 +3,6 @@
  * It defines the contract that all view implementations have to follow.
  * Views are notified by the model when a state changes as the Observer Pattern.
  *
- * @author Esli Emmanuel Konate, Joseph Dereje, Aymen Zebentout, Amber Skinner
  * @version 2.0
  */
 

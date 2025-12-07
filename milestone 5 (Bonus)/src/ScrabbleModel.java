@@ -8,7 +8,6 @@ import java.io.*;
  * It contains the logic and game state.
  * It notifies the views when the model changes with Observer pattern.
  *
- * @author Emmanuel Konate, Amber Skinner, Joseph Dereje, Aymen Zebentout
  * @version 3.0
  */
 

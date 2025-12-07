@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
  * Controller class for the Scrabble game with MVC pattern.
  * It implements ActionListener to handle button clicks with Event Model.
  * Middle point between the view and model.
- * @author Esli Emmanuel Konate, Ayment Zebentout, Joseph Dereje, Amber Skinner
  * @version 2.0
  */
 

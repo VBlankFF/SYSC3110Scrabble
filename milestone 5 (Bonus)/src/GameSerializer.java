@@ -3,7 +3,6 @@ import java.io.*;
 /**
  * Class to help handle game serialization and deserialization.
  *
- * @author Esli Emmanuel Konate 101322259
  * version 1.0
  */
 

@@ -4,7 +4,6 @@ import java.io.Serializable;
 /**
  * Player class for Scrabble game.
  * Represents a player with their tiles, score, and index.
- * @author Aymen Zebentout, Esli Emmanuel Konate
  * @version 3.0
  * @since 11/27/2025
  */

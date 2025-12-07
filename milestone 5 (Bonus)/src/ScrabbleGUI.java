@@ -6,9 +6,7 @@ import java.util.List;
  * Swing GUI implementation of ScrabbleView.
  * It shows the game state with Java Swing items.
  * It updates automatically when notified by the model.
- * Contains Emmanuel's Bonus Background
  *
- * @author Esli Emmanuel Konate, Amber Skinner, Joseph Dereje, Aymen Zebentout
  * @version 3.0
  */
 

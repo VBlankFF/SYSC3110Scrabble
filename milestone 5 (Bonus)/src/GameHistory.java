@@ -3,7 +3,6 @@ import java.util.List;
 
 /**
  * GameHistory is a class that keeps track of the changes to the game state that happened in a given turn.
- * @author Amber Skinner
  */
 public class GameHistory {
     public int playerId;

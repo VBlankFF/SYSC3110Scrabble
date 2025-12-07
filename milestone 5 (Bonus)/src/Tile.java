@@ -3,7 +3,6 @@ import java.io.Serializable;
 /**
  * Tile class for Scrabble game.
  * Represents a Tile.
- * @author Joseph Dereje, Esli Emmanuel Konate
  * @version 3.0
  */
 

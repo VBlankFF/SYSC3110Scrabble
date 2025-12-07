@@ -6,7 +6,6 @@ import java.util.*;
  * It contains 100 tiles with normal Scrabble distribution.
  * It also gives ways to draw random tiles and check if empty.
  *
- * @author Emmanuel Konate 101322259
  * @version 3.0
  */
 

@@ -3,7 +3,6 @@ import java.util.Dictionary;
 
 /**
  * AIPlayer is an AI player for the ScrabbleGame
- * @author Amber Skinner
  */
 public class AIPlayer extends Player {
 
